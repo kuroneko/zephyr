@@ -57,6 +57,28 @@
 #define RCC_PLLQ_ENABLE()
 #endif /* RCC_PLLCFGR_PLLQEN */
 
+#if defined(RCC_CFGR_ADCPRE)
+#define z_adc_prescaler(v) LL_RCC_ADC_CLKSRC_PCLK2_DIV_ ## v
+#define adc_prescaler(v) z_adc_prescaler(v)
+#elif defined(RCC_CFGR2_ADC1PRES)
+#define z_adc12_prescaler(v) \
+	COND_CODE_1(IS_EQ(v, 0), \
+		    LL_RCC_ADC1_CLKSRC_HCLK, \
+		    LL_RCC_ADC1_CLKSRC_PLL_DIV_ ## v)
+#define adc12_prescaler(v) z_adc12_prescaler(v)
+#else
+#define z_adc12_prescaler(v) \
+	COND_CODE_1(IS_EQ(v, 0), \
+		    LL_RCC_ADC12_CLKSRC_HCLK, \
+		    LL_RCC_ADC12_CLKSRC_PLL_DIV_ ## v)
+#define adc12_prescaler(v) z_adc12_prescaler(v)
+#define z_adc34_prescaler(v) \
+	COND_CODE_1(IS_EQ(v, 0), \
+		    LL_RCC_ADC34_CLKSRC_HCLK, \
+		    LL_RCC_ADC34_CLKSRC_PLL_DIV_ ## v)
+#define adc34_prescaler(v) z_adc34_prescaler(v)
+#endif
+
 /**
  * @brief Return frequency for pll with 2 dividers and a multiplier
  */
